@@ -1,8 +1,8 @@
 layout: {zmk_keyboard: sofle}
 layers:
-  default: [ESC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', BACKSPACE, TAB, Q, W, E, R, T, Y, U, I, O, P, \, CAPS, A, S, D, F, G, H, J, K, L, ;, '''', LSHFT,
-    Z, X, C, V, B, MUTE, '', N, M, ',', ., /, ENTER, LCTRL, LEFT GUI, LEFT ALT, lower, SPACE, SPACE, ENTER, raise, RIGHT SHIFT, DELETE]
-  lower:
+  Base: [ESC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', BACKSPACE, TAB, Q, W, E, R, T, Y, U, I, O, P, \, CAPS, A, S, D, F, G, H, J, K, L, ;, '''', LSHFT,
+    Z, X, C, V, B, MUTE, '', N, M, ',', ., /, ENTER, LCTRL, LEFT GUI, LEFT ALT, Lower, SPACE, SPACE, ENTER, Raise, RIGHT SHIFT, DELETE]
+  Lower:
   - '`'
   - F1
   - F2
@@ -63,7 +63,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  raise:
+  Raise:
   - '~'
   - {t: BT, h: '0'}
   - {t: BT, h: '1'}
@@ -124,7 +124,7 @@ layers:
   - {type: held}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  adjust:
+  Adjust:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -185,3 +185,6 @@ layers:
   - {type: held}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+combos:
+- p: [13, 26, 37]
+  k: '&soft_off'
