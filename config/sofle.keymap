@@ -130,7 +130,7 @@
 &kp GRAVE  &kp F1           &kp F2          &kp F3           &kp F4           &kp F5                                 &kp F6           &kp F7           &kp F8    &kp F9     &kp F10           &trans
 &trans     &kp GRAVE        &mkp LCLK       &mkp MCLK        &mkp RCLK        &mkp MB4                               &kp PG_UP        &kp END          &kp UP    &kp HOME   &kp MINUS         &kp EQUAL
 &trans     &kp TILDE        &trans          &trans           &trans           &mkp MB5                               &kp PG_DN        &kp LEFT         &kp DOWN  &kp RIGHT  &kp LEFT_BRACKET  &kp RIGHT_BRACKET
-&trans     &rgb_ug RGB_OFF  &rgb_ug RGB_ON  &rgb_ug RGB_EFF  &rgb_ug RGB_EFR  &rgb_ug RGB_SPI  &kp C_MUTE    &trans  &rgb_ug RGB_BRI  &rgb_ug RGB_BRD  &kp INS   &kp F11    &kp F12           &trans
+&trans     &rgb_ug RGB_OFF  &rgb_ug RGB_ON  &rgb_ug RGB_EFF  &rgb_ug RGB_EFR  &rgb_ug RGB_SPI  &kp C_MUTE    &SHIFT_MCLK  &rgb_ug RGB_BRI  &rgb_ug RGB_BRD  &kp INS   &kp F11    &kp F12           &trans
                             &trans          &trans           &trans           &trans           &trans        &trans  &trans           &trans           &trans    &trans
             >;
 
@@ -163,6 +163,7 @@
             //   row 2, col 1                   : ext-power toggle
             //   I / J K L                      : mouse move up / left, down, right
             //   encoder push switches (row 4)  : scroll up / down
+            //   encoder 2 rotation             : scroll
             // Anything left as &trans falls through to LOWER / RAISE.
 
             display-name = "Adjust";
@@ -173,6 +174,10 @@
 &trans  &trans  &trans  &trans  &trans  &trans  &msc SCRL_UP    &msc SCRL_DOWN  &trans  &trans  &trans  &trans  &trans  &trans
                 &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans
             >;
+
+            // Second encoder scrolls the pointer while ADJUST is held; other
+            // layers keep the original PageUp/PageDown binding.
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &scroll_encoder>;
         };
     };
 };

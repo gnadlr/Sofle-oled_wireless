@@ -46,7 +46,7 @@ layers:
   - RGB EFR
   - RGB SPI
   - MUTE
-  - {t: ▽, type: trans}
+  - '&SHIFT_MCLK'
   - RGB BRI
   - RGB BRD
   - INS
