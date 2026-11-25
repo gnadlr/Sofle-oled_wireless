@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-/* Mouse move/scroll defaults, mirroring zmk-sofle. Must precede pointing.h. */
+/* Mouse move/scroll defaults, mirroring zmk-sofle. Must precede pointing.h.
+ * 1200 / 25 are 2x ZMK's own defaults (600 / 10). */
 #define ZMK_POINTING_DEFAULT_MOVE_VAL 1200
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 25
 
@@ -18,11 +19,11 @@
 #include <input/processors.dtsi>
 
 /* Pointing tuning ported from zmk-sofle.
- * Dormant here: the Sofle has no centre column, so nothing binds &mmv / &msc yet.
- * It takes effect the moment a key is bound to them. */
-&mmv_input_listener { input-processors = <&zip_xy_scaler 2 1>; };
+ * No extra scaling here: the move/scroll values above already double ZMK's
+ * defaults, and the ADJUST layer binds &mmv / &msc to the mouse cluster. */
+&mmv_input_listener { input-processors = <&zip_xy_scaler 1 1>; };
 
-&msc_input_listener { input-processors = <&zip_scroll_scaler 2 1>; };
+&msc_input_listener { input-processors = <&zip_scroll_scaler 1 1>; };
 
 &msc {
     acceleration-exponent = <1>;
@@ -45,8 +46,7 @@
 #define ADJUST 3
 
 / {
-    /* Ported from zmk-sofle: defined but bound to no key, exactly as in that
-     * keymap. Bind it to a key when you want encoder-scroll. */
+    /* Ported from zmk-sofle: used as the second encoder's binding on ADJUST. */
     scroll_encoder: scroll_encoder {
         compatible = "zmk,behavior-sensor-rotate";
         #sensor-binding-cells = <0>;
@@ -56,7 +56,7 @@
     };
 
     macros {
-        /* Shift + middle click in one key. Defined but unbound, as upstream. */
+        /* Shift + middle click in one key. Bound on the Lower layer. */
         SHIFT_MCLK: SHIFT_MCLK {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -102,14 +102,14 @@
             // |  ESC  |  Q  |  W  |  E   |  R   |  T   |                   |  Y   |  U    |  I    |  O   |   P   | BKSPC |
             // |  TAB  |  A  |  S  |  D   |  F   |  G   |                   |  H   |  J    |  K    |  L   |   ;   |   '   |
             // | SHIFT |  Z  |  X  |  C   |  V   |  B   |  MUTE  |  |       |  N   |  M    |  ,    |  .   |   /   | SHIFT |
-            //               | GUI | ALT  | CTRL | LOWER|  ENTER |  | SPACE | RAISE| CTRL  | ALT   | GUI  |
+            //         | CTRL | GUI | ALT | LOWER | SPACE |  | SPACE | ENTER | RAISE | SHIFT | DEL |
 
             bindings = <
 &kp ESC    &kp N1  &kp N2     &kp N3        &kp N4        &kp N5                              &kp N6     &kp N7  &kp N8           &kp N9      &kp N0    &kp BACKSPACE
 &kp TAB    &kp Q   &kp W      &kp E         &kp R         &kp T                               &kp Y      &kp U   &kp I            &kp O       &kp P     &kp BSLH
 &kp CAPS   &kp A   &kp S      &kp D         &kp F         &kp G                               &kp H      &kp J   &kp K            &kp L       &kp SEMI  &kp APOS
 &kp LSHFT  &kp Z   &kp X      &kp C         &kp V         &kp B      &kp C_MUTE    &none      &kp N      &kp M   &kp COMMA        &kp DOT     &kp FSLH  &kp ENTER
-                   &kp LCTRL  &kp LEFT_GUI  &kp LEFT_ALT  &mo LOWER  &kp SPACE     &kp SPACE  &kp ENTER  &mo 2   &kp RIGHT_SHIFT  &kp DELETE
+                   &kp LCTRL  &kp LEFT_GUI  &kp LEFT_ALT  &mo LOWER  &kp SPACE     &kp SPACE  &kp ENTER  &mo RAISE  &kp RIGHT_SHIFT  &kp DELETE
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
@@ -141,10 +141,10 @@
             display-name = "Raise";
 
             // ------------------------------------------------------------------------------------------------------------
-            // | BTCLR | BT1  | BT2  |  BT3  |  BT4  |  BT5 |                |      |      |       |      |       |       |
-            // |       | INS  | PSCR | GUI   |       |      |                | PGUP |      |   ^   |      |       |       |
-            // |       | ALT  | CTRL | SHIFT |       | CAPS |                | PGDN |   <- |   v   |  ->  |  DEL  | BKSPC |
-            // |       | UNDO | CUT  | COPY  | PASTE |      |      |  |      |      |      |       |      |       |       |
+            // |   ~   | BT0  |  BT1  |  BT2  |  BT3  |  BT4 |                |  F6  |  F7  |  F8   |  F9  |  F10  |       |
+            // |       | BTCLR| CLRALL|       |       |      |                |      |      |  F11  |  F12 |   _   |   +   |
+            // |       | USB  |  BLE  |       |       |      |                |      |      |       |      |   [   |   ]   |
+            // |       | RST  |       | BOOT  |       |      |        |  |     |      |      |  RST  | OFF  | BOOT  |       |
             //                |      |       |       |      |      |  |      |      |      |       |      |
 
             bindings = <
@@ -160,6 +160,7 @@
 
         adjust_layer {
             // ADJUST is a conditional layer: hold LOWER + RAISE.
+            //   top-left key (ESC position)    : ZMK Studio unlock
             //   row 2, col 1                   : ext-power toggle
             //   I / J K L                      : mouse move up / left, down, right
             //   encoder push switches (row 4)  : scroll up / down
@@ -168,7 +169,7 @@
 
             display-name = "Adjust";
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans  &trans
+&studio_unlock  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans  &trans
 &ext_power EP_TOG  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &mmv MOVE_UP  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_RIGHT  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans  &msc SCRL_UP    &msc SCRL_DOWN  &trans  &trans  &trans  &trans  &trans  &trans
